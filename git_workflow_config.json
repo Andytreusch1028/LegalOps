@@ -1,0 +1,9 @@
+{
+  "auto_pull_on_start": true,
+  "auto_commit_interval": 30,
+  "auto_push_interval": 60,
+  "commit_message_template": "Auto-commit: {timestamp}",
+  "max_commits_before_push": 3,
+  "backup_before_operations": true,
+  "notify_on_errors": true
+}

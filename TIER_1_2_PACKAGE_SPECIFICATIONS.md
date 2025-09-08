@@ -9,9 +9,11 @@
 ### **Package Tiers:**
 
 #### **Basic Real Estate Package - $199/month**
+
 **Target**: Individual real estate investors, small property managers
 
 **Services Included:**
+
 1. **Document Preparation (90% Automated)**
    - **Residential Lease Agreements**: AI-generated templates with state-specific clauses
    - **Purchase Agreements**: Standardized templates with customizable terms
@@ -20,6 +22,7 @@
    - **Move-in/Move-out Checklists**: Property condition documentation
 
 2. **Filing Services (80% Automated)**
+
    - **Property Transfer Documents**: Deed preparation and recording
    - **Property Tax Appeals**: Form preparation and submission
    - **Business License Applications**: Property management business licenses
