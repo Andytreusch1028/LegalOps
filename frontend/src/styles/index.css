@@ -22,12 +22,14 @@
   /* Glass morphism components */
   .glass {
     @apply bg-white/10 border border-white/20;
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
   }
   
   .glass-dark {
-    @apply bg-black/20 backdrop-blur-md border border-white/10;
+    @apply bg-black/20 border border-white/10;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
   
   .glass-card {
@@ -138,6 +140,7 @@
   }
   
   .backdrop-blur-xs {
+    -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
   }
 }
