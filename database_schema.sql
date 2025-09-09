@@ -515,6 +515,33 @@ CREATE INDEX idx_audit_logs_entity ON audit_logs(entity_type, entity_id);
 CREATE INDEX idx_audit_logs_action ON audit_logs(action);
 CREATE INDEX idx_audit_logs_created_at ON audit_logs(created_at);
 
+-- AI agent system indexes
+CREATE INDEX idx_ai_agent_tasks_user_id ON ai_agent_tasks(user_id);
+CREATE INDEX idx_ai_agent_tasks_agent_type ON ai_agent_tasks(agent_type);
+CREATE INDEX idx_ai_agent_tasks_status ON ai_agent_tasks(status);
+CREATE INDEX idx_ai_agent_tasks_created_at ON ai_agent_tasks(created_at);
+
+-- AI usage control indexes
+CREATE INDEX idx_ai_usage_limits_user_id ON ai_usage_limits(user_id);
+CREATE INDEX idx_ai_usage_limits_type ON ai_usage_limits(limit_type);
+CREATE INDEX idx_ai_usage_limits_reset ON ai_usage_limits(last_reset);
+
+CREATE INDEX idx_ai_usage_log_user_id ON ai_usage_log(user_id);
+CREATE INDEX idx_ai_usage_log_created_at ON ai_usage_log(created_at);
+CREATE INDEX idx_ai_usage_log_agent_type ON ai_usage_log(agent_type);
+
+-- AI abuse detection indexes
+CREATE INDEX idx_ai_abuse_user_id ON ai_abuse_detection(user_id);
+CREATE INDEX idx_ai_abuse_violation_type ON ai_abuse_detection(violation_type);
+CREATE INDEX idx_ai_abuse_severity ON ai_abuse_detection(severity);
+CREATE INDEX idx_ai_abuse_detected_at ON ai_abuse_detection(detected_at);
+
+-- AI escalation indexes
+CREATE INDEX idx_ai_escalations_user_id ON ai_escalations(user_id);
+CREATE INDEX idx_ai_escalations_agent_type ON ai_escalations(agent_type);
+CREATE INDEX idx_ai_escalations_reason ON ai_escalations(escalation_reason);
+CREATE INDEX idx_ai_escalations_escalated_at ON ai_escalations(escalated_at);
+
 -- Full-text search indexes
 CREATE INDEX idx_users_search ON users USING gin(to_tsvector('english', first_name || ' ' || last_name || ' ' || company_name));
 CREATE INDEX idx_services_search ON services USING gin(to_tsvector('english', name || ' ' || description));
@@ -597,6 +624,127 @@ LEFT JOIN user_services us ON s.id = us.service_id
 GROUP BY s.id, s.name, s.category;
 
 -- ============================================================================
+-- AI AGENT SYSTEM AND GUARDRAILS
+-- ============================================================================
+
+-- AI agent capabilities and permissions
+CREATE TABLE ai_agent_capabilities (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    agent_type VARCHAR(50) NOT NULL, -- administrative, service_delivery, communication, compliance
+    capability_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    upl_risk_level VARCHAR(20) DEFAULT 'low', -- low, medium, high
+    requires_human_approval BOOLEAN DEFAULT FALSE,
+    max_automation_level VARCHAR(50), -- fully_automated, semi_automated, manual_only
+    parameters JSONB DEFAULT '{}',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI agent task execution log
+CREATE TABLE ai_agent_tasks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    agent_type VARCHAR(50) NOT NULL,
+    task_name VARCHAR(100) NOT NULL,
+    task_parameters JSONB DEFAULT '{}',
+    status VARCHAR(50) DEFAULT 'pending', -- pending, in_progress, completed, failed, requires_approval
+    result_data JSONB DEFAULT '{}',
+    error_message TEXT,
+    human_approval_required BOOLEAN DEFAULT FALSE,
+    approved_by UUID REFERENCES users(id),
+    approved_at TIMESTAMP WITH TIME ZONE,
+    executed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI usage limits and cost control
+CREATE TABLE ai_usage_limits (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    limit_type VARCHAR(50) NOT NULL, -- daily_tokens, monthly_tokens, daily_requests, monthly_requests
+    limit_value INTEGER NOT NULL,
+    current_usage INTEGER DEFAULT 0,
+    reset_period VARCHAR(20) NOT NULL, -- daily, monthly
+    last_reset TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI usage tracking and cost monitoring
+CREATE TABLE ai_usage_log (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    agent_type VARCHAR(50) NOT NULL,
+    action_type VARCHAR(100) NOT NULL,
+    tokens_used INTEGER DEFAULT 0,
+    cost_estimate DECIMAL(10,4) DEFAULT 0,
+    request_size INTEGER DEFAULT 0,
+    response_size INTEGER DEFAULT 0,
+    execution_time_ms INTEGER DEFAULT 0,
+    success BOOLEAN DEFAULT TRUE,
+    error_code VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI abuse detection and violation tracking
+CREATE TABLE ai_abuse_detection (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    violation_type VARCHAR(50) NOT NULL, -- off_topic, excessive_usage, inappropriate_content, system_gaming
+    violation_details JSONB DEFAULT '{}',
+    severity VARCHAR(20) DEFAULT 'low', -- low, medium, high, critical
+    action_taken VARCHAR(50) DEFAULT 'warning', -- warning, throttle, suspend, block
+    detected_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    resolved_by UUID REFERENCES users(id),
+    resolution_notes TEXT
+);
+
+-- AI content filtering rules and patterns
+CREATE TABLE ai_content_filters (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    filter_type VARCHAR(50) NOT NULL, -- keyword_block, pattern_block, context_validation
+    filter_name VARCHAR(100) NOT NULL,
+    filter_pattern TEXT NOT NULL,
+    filter_action VARCHAR(50) NOT NULL, -- block, warn, flag, allow
+    severity VARCHAR(20) DEFAULT 'medium', -- low, medium, high, critical
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI agent performance and quality metrics
+CREATE TABLE ai_agent_metrics (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    agent_type VARCHAR(50) NOT NULL,
+    metric_type VARCHAR(50) NOT NULL, -- response_time, success_rate, user_satisfaction, cost_efficiency
+    metric_value DECIMAL(10,4) NOT NULL,
+    measurement_period VARCHAR(20) NOT NULL, -- hourly, daily, weekly, monthly
+    recorded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    metadata JSONB DEFAULT '{}'
+);
+
+-- AI escalation and human handoff tracking
+CREATE TABLE ai_escalations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    agent_type VARCHAR(50) NOT NULL,
+    escalation_reason VARCHAR(100) NOT NULL, -- upl_risk, complex_query, user_request, system_error
+    escalation_details JSONB DEFAULT '{}',
+    original_request TEXT,
+    ai_response TEXT,
+    human_response TEXT,
+    escalated_to UUID REFERENCES users(id),
+    escalated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    resolution_quality INTEGER, -- 1-5 rating
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
 -- INITIAL DATA SETUP
 -- ============================================================================
 
@@ -614,3 +762,33 @@ INSERT INTO users (email, password_hash, first_name, last_name, company_name, bu
 -- Grant admin role
 INSERT INTO user_roles (user_id, role, permissions) 
 SELECT id, 'admin', '{"all": true}' FROM users WHERE email = 'admin@legalops.com';
+
+-- Insert AI agent capabilities
+INSERT INTO ai_agent_capabilities (agent_type, capability_name, description, upl_risk_level, requires_human_approval, max_automation_level) VALUES
+('administrative', 'schedule_appointment', 'Schedule appointments and reminders for compliance deadlines', 'low', FALSE, 'fully_automated'),
+('administrative', 'send_reminder', 'Send automated reminders for upcoming deadlines', 'low', FALSE, 'fully_automated'),
+('administrative', 'update_calendar', 'Update user calendar with important dates', 'low', FALSE, 'fully_automated'),
+('service_delivery', 'prepare_document', 'Prepare documents using approved templates', 'low', FALSE, 'semi_automated'),
+('service_delivery', 'submit_filing', 'Submit filings to government systems', 'medium', TRUE, 'semi_automated'),
+('service_delivery', 'check_status', 'Check status of government filings', 'low', FALSE, 'fully_automated'),
+('communication', 'send_notification', 'Send service updates and notifications', 'low', FALSE, 'fully_automated'),
+('communication', 'proactive_outreach', 'Proactive communication based on user behavior', 'low', FALSE, 'semi_automated'),
+('communication', 'collect_feedback', 'Collect and respond to user feedback', 'low', FALSE, 'semi_automated'),
+('compliance', 'upl_monitoring', 'Monitor all AI actions for UPL compliance', 'high', TRUE, 'fully_automated'),
+('compliance', 'risk_assessment', 'Assess risk level of AI actions', 'high', TRUE, 'semi_automated'),
+('compliance', 'escalate_to_human', 'Escalate complex situations to human review', 'high', TRUE, 'fully_automated');
+
+-- Insert default AI usage limits by user tier
+INSERT INTO ai_usage_limits (user_id, limit_type, limit_value, reset_period) 
+SELECT u.id, 'daily_requests', 50, 'daily' FROM users u WHERE u.email = 'admin@legalops.com';
+
+INSERT INTO ai_usage_limits (user_id, limit_type, limit_value, reset_period) 
+SELECT u.id, 'monthly_tokens', 100000, 'monthly' FROM users u WHERE u.email = 'admin@legalops.com';
+
+-- Insert content filtering rules
+INSERT INTO ai_content_filters (filter_type, filter_name, filter_pattern, filter_action, severity) VALUES
+('keyword_block', 'coding_keywords', 'code|programming|python|javascript|java|c\+\+|html|css|sql|database|api|github|git', 'block', 'high'),
+('keyword_block', 'crypto_trading', 'bitcoin|crypto|cryptocurrency|trading|investment|stock|forex|gambling|casino', 'block', 'high'),
+('keyword_block', 'personal_topics', 'personal|relationship|dating|marriage|divorce|therapy|medical|health|mental', 'block', 'medium'),
+('keyword_block', 'illegal_activities', 'hack|hacking|illegal|fraud|scam|steal|theft|drug|weapon', 'block', 'critical'),
+('context_validation', 'legal_business_only', 'business|llc|corporation|filing|compliance|real estate|property|contract|agreement|healthcare|hipaa|license|permit', 'allow', 'low');
