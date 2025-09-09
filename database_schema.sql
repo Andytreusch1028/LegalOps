@@ -542,6 +542,116 @@ CREATE INDEX idx_ai_escalations_agent_type ON ai_escalations(agent_type);
 CREATE INDEX idx_ai_escalations_reason ON ai_escalations(escalation_reason);
 CREATE INDEX idx_ai_escalations_escalated_at ON ai_escalations(escalated_at);
 
+-- Modern authentication indexes
+CREATE INDEX idx_authentication_methods_user_id ON authentication_methods(user_id);
+CREATE INDEX idx_authentication_methods_type ON authentication_methods(method_type);
+CREATE INDEX idx_passkey_credentials_user_id ON passkey_credentials(user_id);
+CREATE INDEX idx_passkey_credentials_credential_id ON passkey_credentials(credential_id);
+CREATE INDEX idx_magic_link_tokens_token_hash ON magic_link_tokens(token_hash);
+CREATE INDEX idx_magic_link_tokens_expires_at ON magic_link_tokens(expires_at);
+CREATE INDEX idx_authentication_sessions_user_id ON authentication_sessions(user_id);
+CREATE INDEX idx_authentication_sessions_token ON authentication_sessions(session_token);
+CREATE INDEX idx_trusted_devices_user_id ON trusted_devices(user_id);
+CREATE INDEX idx_authentication_risk_user_id ON authentication_risk(user_id);
+
+-- Security indexes
+CREATE INDEX idx_user_security_settings_user_id ON user_security_settings(user_id);
+CREATE INDEX idx_security_audit_log_user_id ON security_audit_log(user_id);
+CREATE INDEX idx_security_audit_log_event_type ON security_audit_log(event_type);
+CREATE INDEX idx_security_audit_log_created_at ON security_audit_log(created_at);
+CREATE INDEX idx_data_access_log_user_id ON data_access_log(user_id);
+CREATE INDEX idx_data_access_log_data_type ON data_access_log(data_type);
+CREATE INDEX idx_user_privacy_settings_user_id ON user_privacy_settings(user_id);
+
+-- Vertical dashboard indexes
+CREATE INDEX idx_dashboard_types_service_category ON dashboard_types(service_category);
+CREATE INDEX idx_dashboard_configurations_type_id ON dashboard_configurations(dashboard_type_id);
+CREATE INDEX idx_user_dashboard_assignments_user_id ON user_dashboard_assignments(user_id);
+CREATE INDEX idx_dashboard_widgets_category ON dashboard_widgets(widget_category);
+CREATE INDEX idx_user_widget_customizations_user_id ON user_widget_customizations(user_id);
+
+-- AI agent foundation indexes
+CREATE INDEX idx_ai_agent_types_category ON ai_agent_types(agent_category);
+CREATE INDEX idx_ai_agent_vertical_configs_agent_type ON ai_agent_vertical_configs(agent_type_id);
+CREATE INDEX idx_ai_agent_vertical_configs_service_category ON ai_agent_vertical_configs(service_category);
+
+-- Workflow foundation indexes
+CREATE INDEX idx_workflow_templates_service_category ON workflow_templates(service_category);
+CREATE INDEX idx_user_workflow_instances_user_id ON user_workflow_instances(user_id);
+CREATE INDEX idx_user_workflow_instances_template_id ON user_workflow_instances(workflow_template_id);
+
+-- Document foundation indexes
+CREATE INDEX idx_document_template_categories_service_category ON document_template_categories(service_category);
+
+-- Service registry indexes
+CREATE INDEX idx_service_registry_service_key ON service_registry(service_key);
+CREATE INDEX idx_service_registry_category ON service_registry(service_category);
+CREATE INDEX idx_service_registry_type ON service_registry(service_type);
+CREATE INDEX idx_service_registry_enabled ON service_registry(is_enabled);
+CREATE INDEX idx_service_features_service_id ON service_features(service_id);
+CREATE INDEX idx_service_features_feature_key ON service_features(feature_key);
+CREATE INDEX idx_service_pricing_service_id ON service_pricing(service_id);
+CREATE INDEX idx_user_service_access_user_id ON user_service_access(user_id);
+CREATE INDEX idx_user_service_access_service_id ON user_service_access(service_id);
+CREATE INDEX idx_plugin_registry_plugin_key ON plugin_registry(plugin_key);
+CREATE INDEX idx_plugin_registry_type ON plugin_registry(plugin_type);
+CREATE INDEX idx_service_usage_analytics_service_id ON service_usage_analytics(service_id);
+CREATE INDEX idx_service_usage_analytics_user_id ON service_usage_analytics(user_id);
+CREATE INDEX idx_service_usage_analytics_timestamp ON service_usage_analytics(timestamp);
+
+-- Marketing web indexes
+CREATE INDEX idx_marketing_campaigns_type ON marketing_campaigns(campaign_type);
+CREATE INDEX idx_marketing_campaigns_status ON marketing_campaigns(status);
+CREATE INDEX idx_leads_email ON leads(email);
+CREATE INDEX idx_leads_status ON leads(status);
+CREATE INDEX idx_leads_created_at ON leads(created_at);
+CREATE INDEX idx_content_pages_slug ON content_pages(page_slug);
+CREATE INDEX idx_content_pages_type ON content_pages(page_type);
+CREATE INDEX idx_content_pages_published ON content_pages(is_published);
+
+-- User dashboard indexes
+CREATE INDEX idx_user_dashboard_preferences_user_id ON user_dashboard_preferences(user_id);
+CREATE INDEX idx_user_activity_log_user_id ON user_activity_log(user_id);
+CREATE INDEX idx_user_activity_log_type ON user_activity_log(activity_type);
+CREATE INDEX idx_user_notifications_user_id ON user_notifications(user_id);
+CREATE INDEX idx_user_notifications_read ON user_notifications(is_read);
+
+-- Admin dashboard indexes
+CREATE INDEX idx_admin_analytics_metric_name ON admin_analytics(metric_name);
+CREATE INDEX idx_admin_analytics_date ON admin_analytics(date_recorded);
+CREATE INDEX idx_system_alerts_type ON system_alerts(alert_type);
+CREATE INDEX idx_system_alerts_resolved ON system_alerts(is_resolved);
+CREATE INDEX idx_admin_roles_name ON admin_roles(role_name);
+CREATE INDEX idx_user_admin_roles_user_id ON user_admin_roles(user_id);
+CREATE INDEX idx_user_admin_roles_role_id ON user_admin_roles(role_id);
+
+-- Delivery system indexes
+CREATE INDEX idx_workflow_instances_user_id ON workflow_instances(user_id);
+CREATE INDEX idx_workflow_instances_status ON workflow_instances(status);
+CREATE INDEX idx_workflow_instances_assigned_to ON workflow_instances(assigned_to);
+CREATE INDEX idx_employee_tasks_assigned_to ON employee_tasks(assigned_to);
+CREATE INDEX idx_employee_tasks_status ON employee_tasks(status);
+CREATE INDEX idx_employee_tasks_due_date ON employee_tasks(due_date);
+CREATE INDEX idx_quality_reviews_task_id ON quality_reviews(task_id);
+CREATE INDEX idx_quality_reviews_reviewer_id ON quality_reviews(reviewer_id);
+CREATE INDEX idx_employee_performance_employee_id ON employee_performance(employee_id);
+CREATE INDEX idx_employee_performance_period ON employee_performance(period_start, period_end);
+
+-- Lifecycle tracking indexes
+CREATE INDEX idx_service_lifecycle_user_id ON service_lifecycle(user_id);
+CREATE INDEX idx_service_lifecycle_service_id ON service_lifecycle(service_id);
+CREATE INDEX idx_service_lifecycle_stage ON service_lifecycle(current_stage);
+CREATE INDEX idx_lifecycle_events_lifecycle_id ON lifecycle_events(lifecycle_id);
+CREATE INDEX idx_lifecycle_events_type ON lifecycle_events(event_type);
+CREATE INDEX idx_service_delivery_metrics_service_id ON service_delivery_metrics(service_id);
+CREATE INDEX idx_service_delivery_metrics_date ON service_delivery_metrics(measurement_date);
+
+-- UI components indexes
+CREATE INDEX idx_ui_components_component_id ON ui_components(component_id);
+CREATE INDEX idx_ui_components_service_key ON ui_components(service_key);
+CREATE INDEX idx_ui_components_type ON ui_components(component_type);
+CREATE INDEX idx_ui_components_enabled ON ui_components(is_enabled);
+
 -- Full-text search indexes
 CREATE INDEX idx_users_search ON users USING gin(to_tsvector('english', first_name || ' ' || last_name || ' ' || company_name));
 CREATE INDEX idx_services_search ON services USING gin(to_tsvector('english', name || ' ' || description));
@@ -745,13 +855,668 @@ CREATE TABLE ai_escalations (
 );
 
 -- ============================================================================
+-- MODERN AUTHENTICATION SYSTEM
+-- ============================================================================
+
+-- Authentication methods
+CREATE TABLE authentication_methods (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    method_type VARCHAR(50) NOT NULL, -- passkey, magic_link, sms, email, password
+    method_data JSONB DEFAULT '{}', -- Encrypted method-specific data
+    is_primary BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_used TIMESTAMP WITH TIME ZONE
+);
+
+-- Passkey credentials (WebAuthn/FIDO2)
+CREATE TABLE passkey_credentials (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    credential_id TEXT NOT NULL UNIQUE, -- Base64 encoded credential ID
+    public_key TEXT NOT NULL, -- Base64 encoded public key
+    counter INTEGER DEFAULT 0,
+    device_name VARCHAR(255), -- User-friendly device name
+    device_type VARCHAR(100), -- phone, laptop, tablet, etc.
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_used TIMESTAMP WITH TIME ZONE
+);
+
+-- Magic link tokens
+CREATE TABLE magic_link_tokens (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token_hash VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    used_at TIMESTAMP WITH TIME ZONE,
+    ip_address INET,
+    user_agent TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Authentication sessions
+CREATE TABLE authentication_sessions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    session_token VARCHAR(255) NOT NULL UNIQUE,
+    authentication_method VARCHAR(50) NOT NULL,
+    device_fingerprint VARCHAR(255),
+    ip_address INET,
+    user_agent TEXT,
+    location_data JSONB, -- Country, city, etc.
+    is_active BOOLEAN DEFAULT TRUE,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_activity TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Device trust management
+CREATE TABLE trusted_devices (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    device_fingerprint VARCHAR(255) NOT NULL,
+    device_name VARCHAR(255),
+    device_type VARCHAR(100),
+    location_data JSONB,
+    trust_level VARCHAR(20) DEFAULT 'medium', -- low, medium, high
+    is_trusted BOOLEAN DEFAULT FALSE,
+    trust_expires_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Authentication risk assessment
+CREATE TABLE authentication_risk (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    session_id UUID REFERENCES authentication_sessions(id),
+    risk_factors JSONB DEFAULT '{}', -- New device, unusual location, etc.
+    risk_score DECIMAL(3,2) DEFAULT 0.0, -- 0.0 to 1.0
+    risk_level VARCHAR(20) DEFAULT 'low', -- low, medium, high, critical
+    additional_verification_required BOOLEAN DEFAULT FALSE,
+    blocked BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- SECURITY & DATA PROTECTION
+-- ============================================================================
+
+-- User security settings
+CREATE TABLE user_security_settings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    mfa_enabled BOOLEAN DEFAULT FALSE,
+    mfa_secret VARCHAR(255), -- Encrypted MFA secret
+    backup_codes TEXT[], -- Encrypted backup codes
+    password_last_changed TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    failed_login_attempts INTEGER DEFAULT 0,
+    account_locked_until TIMESTAMP WITH TIME ZONE,
+    last_login_ip INET,
+    last_login_location JSONB, -- Country, city, etc.
+    security_questions JSONB DEFAULT '{}', -- Encrypted security questions
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Data encryption keys
+CREATE TABLE encryption_keys (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    key_name VARCHAR(100) NOT NULL UNIQUE,
+    key_type VARCHAR(50) NOT NULL, -- user_data, documents, communications
+    encrypted_key TEXT NOT NULL, -- Encrypted with master key
+    key_version INTEGER DEFAULT 1,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    expires_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Audit trail for security events
+CREATE TABLE security_audit_log (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id),
+    event_type VARCHAR(100) NOT NULL, -- login, logout, password_change, data_access
+    event_details JSONB DEFAULT '{}',
+    ip_address INET,
+    user_agent TEXT,
+    session_id VARCHAR(255),
+    risk_level VARCHAR(20) DEFAULT 'low', -- low, medium, high, critical
+    blocked BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Data access logs
+CREATE TABLE data_access_log (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    data_type VARCHAR(100) NOT NULL, -- personal_info, documents, communications
+    data_id UUID NOT NULL, -- ID of accessed data
+    access_type VARCHAR(50) NOT NULL, -- read, write, delete, export
+    access_reason VARCHAR(255),
+    ip_address INET,
+    user_agent TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Data retention policies
+CREATE TABLE data_retention_policies (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    data_type VARCHAR(100) NOT NULL,
+    retention_period_days INTEGER NOT NULL,
+    auto_delete BOOLEAN DEFAULT FALSE,
+    legal_hold BOOLEAN DEFAULT FALSE, -- Prevent deletion for legal reasons
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Privacy settings
+CREATE TABLE user_privacy_settings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    data_sharing_preferences JSONB DEFAULT '{}',
+    marketing_consent BOOLEAN DEFAULT FALSE,
+    analytics_consent BOOLEAN DEFAULT FALSE,
+    third_party_sharing BOOLEAN DEFAULT FALSE,
+    data_portability BOOLEAN DEFAULT TRUE,
+    right_to_deletion BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- VERTICAL DASHBOARD FOUNDATION
+-- ============================================================================
+
+-- Dashboard types and configurations
+CREATE TABLE dashboard_types (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    dashboard_name VARCHAR(100) NOT NULL UNIQUE,
+    service_category VARCHAR(100) NOT NULL,
+    dashboard_type VARCHAR(50) NOT NULL, -- basic, vertical, enterprise
+    is_active BOOLEAN DEFAULT TRUE,
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Dashboard configurations (JSON-based for flexibility)
+CREATE TABLE dashboard_configurations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    dashboard_type_id UUID NOT NULL REFERENCES dashboard_types(id),
+    configuration_name VARCHAR(100) NOT NULL,
+    configuration_data JSONB NOT NULL, -- workflow stages, features, AI agents
+    is_default BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User dashboard assignments
+CREATE TABLE user_dashboard_assignments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    dashboard_type_id UUID NOT NULL REFERENCES dashboard_types(id),
+    dashboard_config_id UUID REFERENCES dashboard_configurations(id),
+    is_active BOOLEAN DEFAULT TRUE,
+    assigned_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    expires_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Dashboard widgets (reusable across all dashboards)
+CREATE TABLE dashboard_widgets (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    widget_name VARCHAR(100) NOT NULL UNIQUE,
+    widget_type VARCHAR(50) NOT NULL, -- chart, table, form, workflow, ai_chat
+    widget_category VARCHAR(50) NOT NULL, -- general, vertical_specific
+    widget_config JSONB DEFAULT '{}',
+    is_reusable BOOLEAN DEFAULT TRUE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User widget customizations
+CREATE TABLE user_widget_customizations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    widget_id UUID NOT NULL REFERENCES dashboard_widgets(id),
+    dashboard_type_id UUID REFERENCES dashboard_types(id),
+    position_x INTEGER DEFAULT 0,
+    position_y INTEGER DEFAULT 0,
+    width INTEGER DEFAULT 4,
+    height INTEGER DEFAULT 3,
+    widget_settings JSONB DEFAULT '{}',
+    is_visible BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- AI AGENT FOUNDATION (VERTICAL-READY)
+-- ============================================================================
+
+-- AI agent types (extensible for verticals)
+CREATE TABLE ai_agent_types (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    agent_name VARCHAR(100) NOT NULL UNIQUE,
+    agent_category VARCHAR(50) NOT NULL, -- general, vertical_specific
+    agent_description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI agent configurations per vertical
+CREATE TABLE ai_agent_vertical_configs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    agent_type_id UUID NOT NULL REFERENCES ai_agent_types(id),
+    service_category VARCHAR(100) NOT NULL,
+    agent_config JSONB DEFAULT '{}',
+    automation_rules JSONB DEFAULT '[]',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- WORKFLOW FOUNDATION (VERTICAL-READY)
+-- ============================================================================
+
+-- Workflow templates (reusable across verticals)
+CREATE TABLE workflow_templates (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    template_name VARCHAR(100) NOT NULL,
+    service_category VARCHAR(100) NOT NULL,
+    workflow_stages JSONB NOT NULL, -- array of stage objects
+    stage_connections JSONB DEFAULT '{}', -- how stages connect
+    ai_agent_integration JSONB DEFAULT '{}', -- which agents handle which stages
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User workflow instances
+CREATE TABLE user_workflow_instances (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    workflow_template_id UUID NOT NULL REFERENCES workflow_templates(id),
+    instance_name VARCHAR(255) NOT NULL,
+    current_stage VARCHAR(100),
+    stage_data JSONB DEFAULT '{}',
+    status VARCHAR(50) DEFAULT 'active', -- active, completed, paused, cancelled
+    started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    completed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- DOCUMENT FOUNDATION (VERTICAL-READY)
+-- ============================================================================
+
+-- Document template categories
+CREATE TABLE document_template_categories (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    category_name VARCHAR(100) NOT NULL,
+    service_category VARCHAR(100) NOT NULL,
+    parent_category_id UUID REFERENCES document_template_categories(id),
+    sort_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- SERVICE REGISTRY SYSTEM
+-- ============================================================================
+
+-- Service registry for dynamic service management
+CREATE TABLE service_registry (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    service_key VARCHAR(100) NOT NULL UNIQUE, -- business_formation, real_estate, etc.
+    service_name VARCHAR(255) NOT NULL,
+    service_category VARCHAR(100) NOT NULL, -- business, legal, compliance
+    service_type VARCHAR(50) NOT NULL, -- core, addon, plugin
+    version VARCHAR(20) NOT NULL DEFAULT '1.0.0',
+    is_enabled BOOLEAN DEFAULT TRUE,
+    is_core BOOLEAN DEFAULT FALSE, -- Cannot be disabled
+    display_order INTEGER DEFAULT 0,
+    service_config JSONB DEFAULT '{}',
+    dependencies JSONB DEFAULT '[]', -- Other services this depends on
+    conflicts JSONB DEFAULT '[]', -- Services that conflict with this
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Service features and capabilities
+CREATE TABLE service_features (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    service_id UUID NOT NULL REFERENCES service_registry(id) ON DELETE CASCADE,
+    feature_key VARCHAR(100) NOT NULL,
+    feature_name VARCHAR(255) NOT NULL,
+    feature_type VARCHAR(50) NOT NULL, -- api, ui, workflow, integration
+    is_enabled BOOLEAN DEFAULT TRUE,
+    feature_config JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Service pricing and availability
+CREATE TABLE service_pricing (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    service_id UUID NOT NULL REFERENCES service_registry(id) ON DELETE CASCADE,
+    pricing_tier VARCHAR(50) NOT NULL, -- basic, premium, enterprise
+    price DECIMAL(10,2) NOT NULL,
+    billing_cycle VARCHAR(20) NOT NULL, -- one_time, monthly, yearly
+    is_active BOOLEAN DEFAULT TRUE,
+    effective_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User service access and permissions
+CREATE TABLE user_service_access (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    service_id UUID NOT NULL REFERENCES service_registry(id) ON DELETE CASCADE,
+    access_level VARCHAR(50) NOT NULL, -- full, limited, trial
+    granted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    expires_at TIMESTAMP WITH TIME ZONE,
+    is_active BOOLEAN DEFAULT TRUE,
+    access_config JSONB DEFAULT '{}'
+);
+
+-- Plugin registry for modular functionality
+CREATE TABLE plugin_registry (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    plugin_key VARCHAR(100) NOT NULL UNIQUE,
+    plugin_name VARCHAR(255) NOT NULL,
+    plugin_version VARCHAR(20) NOT NULL,
+    plugin_type VARCHAR(50) NOT NULL, -- service, integration, ui_component
+    is_installed BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT FALSE,
+    plugin_config JSONB DEFAULT '{}',
+    dependencies JSONB DEFAULT '[]',
+    installation_path VARCHAR(500),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Service usage analytics
+CREATE TABLE service_usage_analytics (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    service_id UUID NOT NULL REFERENCES service_registry(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    usage_type VARCHAR(50) NOT NULL, -- api_call, ui_interaction, workflow_execution
+    usage_data JSONB DEFAULT '{}',
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    session_id VARCHAR(255),
+    ip_address INET,
+    user_agent TEXT
+);
+
+-- Service configuration templates
+CREATE TABLE service_config_templates (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    service_id UUID NOT NULL REFERENCES service_registry(id) ON DELETE CASCADE,
+    template_name VARCHAR(255) NOT NULL,
+    template_type VARCHAR(50) NOT NULL, -- default, custom, industry_specific
+    template_config JSONB NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- MARKETING WEB INTERFACE
+-- ============================================================================
+
+-- Marketing campaigns
+CREATE TABLE marketing_campaigns (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    campaign_name VARCHAR(255) NOT NULL,
+    campaign_type VARCHAR(50) NOT NULL, -- seo, sem, social, email
+    status VARCHAR(20) DEFAULT 'active',
+    budget DECIMAL(10,2),
+    start_date TIMESTAMP WITH TIME ZONE,
+    end_date TIMESTAMP WITH TIME ZONE,
+    metrics JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Lead management
+CREATE TABLE leads (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    company_name VARCHAR(255),
+    phone VARCHAR(20),
+    lead_source VARCHAR(100),
+    lead_score INTEGER DEFAULT 0,
+    status VARCHAR(50) DEFAULT 'new',
+    assigned_to UUID REFERENCES users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Content management
+CREATE TABLE content_pages (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    page_title VARCHAR(255) NOT NULL,
+    page_slug VARCHAR(255) NOT NULL UNIQUE,
+    page_type VARCHAR(50) NOT NULL, -- landing, blog, service, faq
+    content TEXT,
+    meta_description TEXT,
+    meta_keywords TEXT,
+    is_published BOOLEAN DEFAULT FALSE,
+    published_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- USER DASHBOARD INTERFACE
+-- ============================================================================
+
+-- User dashboard preferences
+CREATE TABLE user_dashboard_preferences (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    preferences JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User activity tracking
+CREATE TABLE user_activity_log (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    activity_type VARCHAR(100) NOT NULL,
+    activity_data JSONB DEFAULT '{}',
+    ip_address INET,
+    user_agent TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User notifications
+CREATE TABLE user_notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    notification_type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    action_url VARCHAR(500),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- ADMIN DASHBOARD INTERFACE
+-- ============================================================================
+
+-- Admin analytics
+CREATE TABLE admin_analytics (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    metric_name VARCHAR(100) NOT NULL,
+    metric_value DECIMAL(15,2),
+    metric_data JSONB DEFAULT '{}',
+    date_recorded DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- System alerts
+CREATE TABLE system_alerts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    alert_type VARCHAR(50) NOT NULL,
+    severity VARCHAR(20) DEFAULT 'medium',
+    message TEXT NOT NULL,
+    is_resolved BOOLEAN DEFAULT FALSE,
+    resolved_by UUID REFERENCES users(id),
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Admin user roles
+CREATE TABLE admin_roles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    role_name VARCHAR(100) NOT NULL UNIQUE,
+    role_description TEXT,
+    permissions JSONB DEFAULT '{}',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User role assignments
+CREATE TABLE user_admin_roles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    role_id UUID NOT NULL REFERENCES admin_roles(id),
+    assigned_by UUID REFERENCES users(id),
+    assigned_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+-- ============================================================================
+-- DELIVERY SYSTEM INTERFACE
+-- ============================================================================
+
+-- Workflow instances
+CREATE TABLE workflow_instances (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    workflow_template_id UUID NOT NULL,
+    user_id UUID NOT NULL REFERENCES users(id),
+    current_stage VARCHAR(100),
+    status VARCHAR(50) DEFAULT 'active',
+    assigned_to UUID REFERENCES users(id),
+    started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    completed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Employee tasks
+CREATE TABLE employee_tasks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    workflow_instance_id UUID REFERENCES workflow_instances(id),
+    assigned_to UUID NOT NULL REFERENCES users(id),
+    task_type VARCHAR(100) NOT NULL,
+    task_description TEXT,
+    priority VARCHAR(20) DEFAULT 'medium',
+    status VARCHAR(50) DEFAULT 'pending',
+    due_date TIMESTAMP WITH TIME ZONE,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    time_spent INTEGER DEFAULT 0, -- minutes
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Quality control reviews
+CREATE TABLE quality_reviews (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    task_id UUID NOT NULL REFERENCES employee_tasks(id),
+    reviewer_id UUID NOT NULL REFERENCES users(id),
+    review_type VARCHAR(50) NOT NULL, -- initial, final, audit
+    review_status VARCHAR(50) DEFAULT 'pending',
+    review_notes TEXT,
+    quality_score INTEGER, -- 1-10
+    approved BOOLEAN DEFAULT FALSE,
+    reviewed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Employee performance metrics
+CREATE TABLE employee_performance (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    employee_id UUID NOT NULL REFERENCES users(id),
+    metric_period VARCHAR(20) NOT NULL, -- daily, weekly, monthly
+    tasks_completed INTEGER DEFAULT 0,
+    average_quality_score DECIMAL(3,2),
+    average_completion_time INTEGER, -- minutes
+    customer_satisfaction DECIMAL(3,2),
+    period_start DATE NOT NULL,
+    period_end DATE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- LIFECYCLE TRACKING SYSTEM
+-- ============================================================================
+
+-- Service lifecycle tracking
+CREATE TABLE service_lifecycle (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    service_id UUID NOT NULL REFERENCES services(id),
+    current_stage VARCHAR(100) NOT NULL,
+    stage_data JSONB DEFAULT '{}',
+    started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    completed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Lifecycle events
+CREATE TABLE lifecycle_events (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    lifecycle_id UUID NOT NULL REFERENCES service_lifecycle(id),
+    event_type VARCHAR(100) NOT NULL,
+    event_data JSONB DEFAULT '{}',
+    triggered_by UUID REFERENCES users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Service delivery metrics
+CREATE TABLE service_delivery_metrics (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    service_id UUID NOT NULL REFERENCES services(id),
+    metric_name VARCHAR(100) NOT NULL,
+    metric_value DECIMAL(15,2),
+    metric_unit VARCHAR(50),
+    measurement_date DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
+-- UI COMPONENTS SYSTEM
+-- ============================================================================
+
+-- UI components registry
+CREATE TABLE ui_components (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    component_id VARCHAR(100) NOT NULL UNIQUE,
+    service_key VARCHAR(100) NOT NULL,
+    component_name VARCHAR(255) NOT NULL,
+    component_type VARCHAR(50) NOT NULL, -- page, widget, workflow, integration
+    component_config JSONB DEFAULT '{}',
+    dependencies JSONB DEFAULT '[]',
+    is_enabled BOOLEAN DEFAULT TRUE,
+    display_order INTEGER DEFAULT 0,
+    render_function VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================================
 -- INITIAL DATA SETUP
 -- ============================================================================
 
 -- Insert default services
 INSERT INTO services (name, description, category, tier, price, features, deliverables, upl_risk_level) VALUES
-('Business Formation - LLC', 'Complete LLC formation service with all required documents and filings', 'business_formation', 'basic', 299.00, '{"filing": true, "ein": true, "operating_agreement": true}', '["Articles of Organization", "EIN Application", "Operating Agreement", "Compliance Calendar"]', 'low'),
-('Business Formation - Corporation', 'Complete Corporation formation with all required documents and filings', 'business_formation', 'basic', 399.00, '{"filing": true, "ein": true, "bylaws": true}', '["Articles of Incorporation", "EIN Application", "Corporate Bylaws", "Compliance Calendar"]', 'low'),
+('Essential Startup Package', 'Complete business startup with EIN, entity formation, and basic licenses', 'business_formation', 'essential', 399.00, '{"ein": true, "entity_formation": true, "state_tax": true, "basic_license": true, "registered_agent": true}', '["EIN Confirmation", "Formation Documents", "State Tax Registration", "Business License", "Operating Agreement", "Compliance Calendar"]', 'low'),
+('Comprehensive Startup Package', 'Complete startup with EIN, entity formation, and local licenses', 'business_formation', 'comprehensive', 699.00, '{"ein": true, "entity_formation": true, "state_tax": true, "city_license": true, "county_license": true, "dba": true, "banking_guidance": true, "insurance_guidance": true}', '["EIN Confirmation", "Formation Documents", "City/County Licenses", "DBA Registration", "Banking Setup Guide", "Insurance Recommendations", "Legal Website Templates", "Employee Handbook"]', 'low'),
+('Premium Startup Package', 'Complete startup with EIN, entity formation, and industry-specific licenses', 'business_formation', 'premium', 1299.00, '{"ein": true, "entity_formation": true, "industry_licenses": true, "building_permits": true, "environmental_permits": true, "professional_licenses": true, "compliance_monitoring": true}', '["EIN Confirmation", "Formation Documents", "Industry Licenses", "Building Permits", "Environmental Permits", "Professional Licenses", "Business Plan", "1-Year Compliance Monitoring"]', 'low'),
+('Restaurant & Food Service Package', 'Specialized package for food businesses with health permits and certifications', 'business_formation', 'industry_specific', 1499.00, '{"ein": true, "entity_formation": true, "health_permit": true, "food_handler_cert": true, "liquor_license": true, "fire_inspection": true, "waste_management": true}', '["EIN Confirmation", "Formation Documents", "Health Department Permit", "Food Handler Certifications", "Liquor License Application", "Fire Inspection", "Waste Management Permit", "Menu Compliance Guide"]', 'low'),
+('Healthcare Practice Package', 'Specialized package for medical practices with professional licensing', 'business_formation', 'industry_specific', 1799.00, '{"ein": true, "entity_formation": true, "medical_license": true, "hipaa_compliance": true, "medicare_enrollment": true, "dea_registration": true, "medical_waste": true}', '["EIN Confirmation", "Formation Documents", "Medical License Application", "HIPAA Compliance Setup", "Medicare/Medicaid Enrollment", "DEA Registration", "Medical Waste Permit", "Patient Privacy Policies"]', 'low'),
+('Construction Company Package', 'Specialized package for construction businesses with contractor licensing', 'business_formation', 'industry_specific', 1399.00, '{"ein": true, "entity_formation": true, "contractor_license": true, "building_permits": true, "environmental_permits": true, "workers_comp": true, "bonding": true}', '["EIN Confirmation", "Formation Documents", "General Contractor License", "Building Permits", "Environmental Permits", "Workers Compensation", "Bonding Services", "Safety Compliance Guide"]', 'low'),
+('Retail & E-commerce Package', 'Specialized package for retail businesses with sales tax and e-commerce compliance', 'business_formation', 'industry_specific', 999.00, '{"ein": true, "entity_formation": true, "sales_tax": true, "ecommerce_compliance": true, "product_liability": true, "payment_processing": true}', '["EIN Confirmation", "Formation Documents", "Sales Tax Registration", "E-commerce Compliance", "Product Liability Insurance", "Payment Processing Setup", "Customer Privacy Policies", "Inventory Management"]', 'low'),
 ('Real Estate - Purchase Package', 'Complete real estate purchase documentation and compliance tracking', 'real_estate', 'premium', 499.00, '{"contract_review": true, "closing_docs": true, "compliance_tracking": true}', '["Purchase Agreement", "Closing Documents", "Title Insurance", "Compliance Calendar"]', 'medium'),
 ('Healthcare - HIPAA Compliance', 'HIPAA compliance package with risk assessment and training', 'healthcare', 'premium', 799.00, '{"risk_assessment": true, "training": true, "policies": true}', '["HIPAA Policies", "Risk Assessment", "Training Materials", "Compliance Calendar"]', 'low');
 
@@ -792,3 +1557,106 @@ INSERT INTO ai_content_filters (filter_type, filter_name, filter_pattern, filter
 ('keyword_block', 'personal_topics', 'personal|relationship|dating|marriage|divorce|therapy|medical|health|mental', 'block', 'medium'),
 ('keyword_block', 'illegal_activities', 'hack|hacking|illegal|fraud|scam|steal|theft|drug|weapon', 'block', 'critical'),
 ('context_validation', 'legal_business_only', 'business|llc|corporation|filing|compliance|real estate|property|contract|agreement|healthcare|hipaa|license|permit', 'allow', 'low');
+
+-- Insert dashboard types
+INSERT INTO dashboard_types (dashboard_name, service_category, dashboard_type, sort_order) VALUES
+('General Dashboard', 'general', 'basic', 1),
+('Business Formation Dashboard', 'business_formation', 'vertical', 2),
+('Registered Agent Dashboard', 'registered_agent', 'vertical', 3),
+('Construction Dashboard', 'construction', 'vertical', 4),
+('Healthcare Dashboard', 'healthcare', 'vertical', 5),
+('Food & Beverage Dashboard', 'food_beverage', 'vertical', 6),
+('Education Dashboard', 'education', 'vertical', 7),
+('Retail Dashboard', 'retail_ecommerce', 'vertical', 8);
+
+-- Insert AI agent types
+INSERT INTO ai_agent_types (agent_name, agent_category, agent_description) VALUES
+('Communication Agent', 'general', 'Handles all user communication and notifications'),
+('Administrative Agent', 'general', 'Manages scheduling, reminders, and administrative tasks'),
+('Service Delivery Agent', 'general', 'Executes service delivery tasks and document generation'),
+('Compliance Agent', 'general', 'Monitors compliance and regulatory requirements'),
+('Construction Agent', 'vertical_specific', 'Specialized for construction project management'),
+('Healthcare Agent', 'vertical_specific', 'Specialized for healthcare compliance'),
+('Food Safety Agent', 'vertical_specific', 'Specialized for food & beverage compliance');
+
+-- Insert reusable widgets
+INSERT INTO dashboard_widgets (widget_name, widget_type, widget_category, widget_config) VALUES
+('Project Status', 'workflow', 'general', '{"display_type": "progress_bar", "show_milestones": true}'),
+('Financial Summary', 'chart', 'general', '{"chart_type": "donut", "show_trends": true}'),
+('Recent Activity', 'table', 'general', '{"columns": ["date", "action", "status"], "limit": 10}'),
+('AI Chat', 'ai_chat', 'general', '{"agent_type": "communication", "context_aware": true}'),
+('Compliance Calendar', 'calendar', 'general', '{"show_deadlines": true, "show_reminders": true}'),
+('Document Library', 'table', 'general', '{"show_download": true, "show_versions": true}'),
+('Workflow Tracker', 'workflow', 'vertical_specific', '{"interactive": true, "show_stages": true}'),
+('Project Timeline', 'chart', 'vertical_specific', '{"chart_type": "gantt", "show_dependencies": true}');
+
+-- Insert document template categories
+INSERT INTO document_template_categories (category_name, service_category, sort_order) VALUES
+('Business Formation', 'business_formation', 1),
+('Registered Agent', 'registered_agent', 2),
+('Construction Contracts', 'construction', 3),
+('Healthcare Compliance', 'healthcare', 4),
+('Food Safety', 'food_beverage', 5),
+('Education Forms', 'education', 6),
+('Retail Compliance', 'retail_ecommerce', 7);
+
+-- Insert data retention policies
+INSERT INTO data_retention_policies (data_type, retention_period_days, auto_delete) VALUES
+('user_communications', 2555, TRUE), -- 7 years
+('audit_logs', 2555, TRUE), -- 7 years
+('user_documents', 2555, TRUE), -- 7 years
+('ai_usage_log', 365, TRUE), -- 1 year
+('security_audit_log', 2555, TRUE), -- 7 years
+('data_access_log', 365, TRUE); -- 1 year
+
+-- Insert core services into service registry
+INSERT INTO service_registry (service_key, service_name, service_category, service_type, version, is_enabled, is_core, display_order, service_config, dependencies, conflicts) VALUES
+('authentication', 'Authentication System', 'core', 'core', '1.0.0', TRUE, TRUE, 1, '{"icon": "shield", "color": "#10B981", "description": "User authentication and security"}', '[]', '[]'),
+('database', 'Database System', 'core', 'core', '1.0.0', TRUE, TRUE, 2, '{"icon": "database", "color": "#6B7280", "description": "Core database functionality"}', '[]', '[]'),
+('business_formation', 'Business Formation', 'business', 'core', '1.0.0', TRUE, TRUE, 3, '{"icon": "business", "color": "#3B82F6", "description": "Complete business formation services"}', '["authentication", "database"]', '[]'),
+('registered_agent', 'Registered Agent Services', 'business', 'core', '1.0.0', TRUE, FALSE, 4, '{"icon": "mail", "color": "#8B5CF6", "description": "Registered agent and mail forwarding services"}', '["authentication", "database"]', '[]'),
+('real_estate', 'Real Estate Services', 'legal', 'addon', '1.0.0', TRUE, FALSE, 5, '{"icon": "home", "color": "#F59E0B", "description": "Real estate transaction services"}', '["authentication", "database"]', '[]'),
+('healthcare', 'Healthcare Services', 'legal', 'addon', '1.0.0', TRUE, FALSE, 6, '{"icon": "medical", "color": "#EF4444", "description": "Healthcare compliance and licensing"}', '["authentication", "database"]', '[]'),
+('construction', 'Construction Services', 'legal', 'addon', '1.0.0', TRUE, FALSE, 7, '{"icon": "construction", "color": "#84CC16", "description": "Construction project management and compliance"}', '["authentication", "database"]', '[]'),
+('food_beverage', 'Food & Beverage Services', 'legal', 'addon', '1.0.0', TRUE, FALSE, 8, '{"icon": "restaurant", "color": "#F97316", "description": "Food service licensing and compliance"}', '["authentication", "database"]', '[]'),
+('education', 'Education Services', 'legal', 'addon', '1.0.0', TRUE, FALSE, 9, '{"icon": "education", "color": "#06B6D4", "description": "Educational institution compliance"}', '["authentication", "database"]', '[]'),
+('retail_ecommerce', 'Retail & E-commerce Services', 'legal', 'addon', '1.0.0', TRUE, FALSE, 10, '{"icon": "shopping", "color": "#EC4899", "description": "Retail and e-commerce compliance"}', '["authentication", "database"]', '[]');
+
+-- Insert service features for business formation
+INSERT INTO service_features (service_id, feature_key, feature_name, feature_type, is_enabled, feature_config) 
+SELECT sr.id, 'ein_acquisition', 'EIN Acquisition', 'workflow', TRUE, '{"automated": true, "processing_time": "1-2 days"}'
+FROM service_registry sr WHERE sr.service_key = 'business_formation';
+
+INSERT INTO service_features (service_id, feature_key, feature_name, feature_type, is_enabled, feature_config) 
+SELECT sr.id, 'license_application', 'License Applications', 'workflow', TRUE, '{"automated": true, "processing_time": "3-7 days"}'
+FROM service_registry sr WHERE sr.service_key = 'business_formation';
+
+INSERT INTO service_features (service_id, feature_key, feature_name, feature_type, is_enabled, feature_config) 
+SELECT sr.id, 'entity_formation', 'Entity Formation', 'workflow', TRUE, '{"automated": true, "processing_time": "1-3 days"}'
+FROM service_registry sr WHERE sr.service_key = 'business_formation';
+
+-- Insert service pricing for business formation
+INSERT INTO service_pricing (service_id, pricing_tier, price, billing_cycle, is_active) 
+SELECT sr.id, 'essential', 399.00, 'one_time', TRUE
+FROM service_registry sr WHERE sr.service_key = 'business_formation';
+
+INSERT INTO service_pricing (service_id, pricing_tier, price, billing_cycle, is_active) 
+SELECT sr.id, 'comprehensive', 699.00, 'one_time', TRUE
+FROM service_registry sr WHERE sr.service_key = 'business_formation';
+
+INSERT INTO service_pricing (service_id, pricing_tier, price, billing_cycle, is_active) 
+SELECT sr.id, 'premium', 1299.00, 'one_time', TRUE
+FROM service_registry sr WHERE sr.service_key = 'business_formation';
+
+-- Insert add-on services
+INSERT INTO services (name, description, category, tier, price, features, deliverables, upl_risk_level) VALUES
+('EIN Only Service', 'Employer Identification Number acquisition', 'business_formation', 'addon', 99.00, '{"ein": true}', '["EIN Confirmation Letter"]', 'low'),
+('City Business License', 'City-level business operation license', 'business_formation', 'addon', 149.00, '{"city_license": true}', '["City Business License"]', 'low'),
+('County Business License', 'County-level business operation license', 'business_formation', 'addon', 149.00, '{"county_license": true}', '["County Business License"]', 'low'),
+('Health Department Permit', 'Health department permit for food service', 'business_formation', 'addon', 199.00, '{"health_permit": true}', '["Health Department Permit"]', 'low'),
+('Building Permit', 'Building and construction permit', 'business_formation', 'addon', 299.00, '{"building_permit": true}', '["Building Permit"]', 'low'),
+('Professional License Application', 'Industry-specific professional license', 'business_formation', 'addon', 399.00, '{"professional_license": true}', '["Professional License Application"]', 'low'),
+('Environmental Permit', 'Environmental compliance permit', 'business_formation', 'addon', 599.00, '{"environmental_permit": true}', '["Environmental Permit"]', 'low'),
+('Federal License Application', 'Federal agency license application', 'business_formation', 'addon', 799.00, '{"federal_license": true}', '["Federal License Application"]', 'low'),
+('License Renewal Service', 'Annual license renewal service', 'business_formation', 'addon', 199.00, '{"license_renewal": true}', '["License Renewal Confirmation"]', 'low'),
+('Compliance Monitoring', 'Ongoing compliance tracking and alerts', 'business_formation', 'addon', 299.00, '{"compliance_monitoring": true}', '["Compliance Calendar", "Renewal Alerts"]', 'low');
