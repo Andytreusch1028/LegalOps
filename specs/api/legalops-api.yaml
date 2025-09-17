@@ -1,0 +1,467 @@
+openapi: 3.0.3
+info:
+  title: LegalOps API
+  description: |
+    Legal Operations Management System API
+    
+    This API provides endpoints for managing legal operations including:
+    - Client management
+    - Matter management
+    - Document management
+    - Time tracking
+    - User authentication and authorization
+    
+    ## Authentication
+    All API endpoints require JWT authentication unless otherwise specified.
+    
+    ## Rate Limiting
+    API requests are rate limited to 100 requests per 15 minutes per IP address.
+    
+  version: 1.0.0
+  contact:
+    name: LegalOps Team
+    email: support@legalops.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.legalops.com/api
+    description: Production server
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Check if the API is running and healthy
+      security: []
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  uptime:
+                    type: number
+                    description: Uptime in seconds
+                  environment:
+                    type: string
+                    example: "production"
+
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate user and return JWT token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "lawyer@lawfirm.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securepassword123"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT access token
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+        '429':
+          description: Too many login attempts
+
+  /clients:
+    get:
+      summary: List clients
+      description: Get a list of all clients
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search clients by name or email
+      responses:
+        '200':
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  clients:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Client'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    
+    post:
+      summary: Create client
+      description: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+      responses:
+        '201':
+          description: Client created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid input data
+        '409':
+          description: Client already exists
+
+  /clients/{clientId}:
+    get:
+      summary: Get client
+      description: Get a specific client by ID
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Client details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          description: Client not found
+    
+    put:
+      summary: Update client
+      description: Update client information
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+      responses:
+        '200':
+          description: Client updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          description: Client not found
+        '400':
+          description: Invalid input data
+    
+    delete:
+      summary: Delete client
+      description: Delete a client
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Client deleted successfully
+        '404':
+          description: Client not found
+
+  /matters:
+    get:
+      summary: List matters
+      description: Get a list of all matters
+      parameters:
+        - name: clientId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter matters by client ID
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [open, closed, on_hold]
+          description: Filter matters by status
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of matters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  matters:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Matter'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    
+    post:
+      summary: Create matter
+      description: Create a new matter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatterInput'
+      responses:
+        '201':
+          description: Matter created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matter'
+        '400':
+          description: Invalid input data
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum: [admin, lawyer, paralegal, user]
+        isActive:
+          type: boolean
+        lastLogin:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        address:
+          type: string
+        company:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, prospect]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ClientInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        address:
+          type: string
+        company:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, prospect]
+          default: active
+
+    Matter:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        clientId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        matterType:
+          type: string
+        status:
+          type: string
+          enum: [open, closed, on_hold]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        assignedLawyerId:
+          type: string
+          format: uuid
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    MatterInput:
+      type: object
+      required:
+        - clientId
+        - title
+      properties:
+        clientId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        matterType:
+          type: string
+        status:
+          type: string
+          enum: [open, closed, on_hold]
+          default: open
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          default: medium
+        assignedLawyerId:
+          type: string
+          format: uuid
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        pages:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
